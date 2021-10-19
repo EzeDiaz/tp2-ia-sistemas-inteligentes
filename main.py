@@ -114,6 +114,29 @@ MUESTRA_ESTADISTICAS = True  #@param {type:"boolean"}
 
 log.info('Parametros de la Corrida definidos')
 
+#################################################################### ESTRUCTURAS ####################################################################
+# En esta seccion se encuentran las estructuras de datos a utilizar
+
+class Calendario:
+    
+    dias = []
+    # dias = [[1,2], [3], [6], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+
+class Desarrollador:
+
+    idDev
+    cantidadDeTandas
+    devsIncompatibles
+    semanas
+    cantidadDiasVacas
+
+    def __init__(self, idDev, cantidadDeTandas, devsIncompatibles, semanas, cantidadDiasVacas):
+        self.idDev = idDev
+        self.cantidadDeTandas = cantidadDeTandas
+        self.devsIncompatibles = devsIncompatibles
+        self.semanas = semanas
+        self.cantidadDiasVacas = cantidadDiasVacas
+
 ##################################################################### FUNCIONES #####################################################################
 # En esta seccion se encuentran todas las funciones a ser utilizadas en la seccion EJECUCION
 
