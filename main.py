@@ -1,3 +1,36 @@
+##################################################################### FUNCIONES #####################################################################
+# En esta seccion se encuentran todas las funciones a ser utilizadas en la seccion EJECUCION
+
+def obtenerDiasDeUnDev(indiceDev):
+    # Nos quedamos con una lista de los dias del dev
+    # 22 elementos; 1 si se tomo vacaciones, 0 si trabajo - No estan los fines de semana
+    diasDelDev = []
+
+    for j in range(22):
+        indiceDiaDelDev = i + 15 * j # i es el desarrollador, j es el dia
+        diasDelDev.append(individual[indiceDiaDelDev])
+
+    return diasDelDev
+
+def seTomoVacacionesEnCiertaSemana(semana, diasDelDev):
+    inicioRango = 5 * semana
+    finRango = 22 if semana == 4 else semana * 5 + 5
+
+    for i in range(inicioRango, finRango):
+        if diasDelDev[i] == 1:
+            return 1
+
+    return 0
+
+# Ojo, las listas tiene que tener la misma longitud
+def noCoincidencias(unaLista, otraLista):
+    contador = 0
+
+    for i in range(len(unaLista)):
+        if unaLista[i] != otraLista[i]:
+            contador+=1
+
+    return contador
 
 ##################################################################### SETUP INICIAL #####################################################################
 # En esta seccion se inicializan las variables auxiliares y las correspondientes a la biblioteca a utilizar
@@ -66,7 +99,73 @@ creator.create("Fitness", base.Fitness, weights=(1.0,))
 
 # definimos la función de aptitud
 def funcAptitud(individual):
-    return sum(individual),
+    puntajeTandas = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    puntajeCoincidencias = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    puntajeSemanas = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    puntajeDias = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    for i in range(15):
+        diasDelDev = obtenerDiasDeUnDev(i)
+        dev = desarrolladores[i]
+
+        #Cantidad de tandas
+        diaAnterior = 0
+        sumaDeTandas = 0
+        for dia in diasDelDev:
+            if(dia == 1 and diaAnterior == 0):
+                sumaDeTandas+=1
+
+            diaAnterior = dia
+
+        # Si coincide lo ocurrido con lo esperado le ponemos 10
+        puntajeTandas[i] = 10 if dev.cantidadDeTandas == sumaDeTandas else abs(dev.cantidadDeTandas - sumaDeTandas)
+            
+        #Coincidencia de desarrolladores
+        listaDeListaDiasDevsIncompatibles = []
+        flagPenalizacion = 0
+
+        for incom in dev.devsIncompatibles:
+            listaDeListaDiasDevsIncompatibles.append(obtenerDiasDeUnDev(incom))
+
+        for dia in diasDelDev:
+            for listaDiasDelIncompatible in listaDeListaDiasDevsIncompatibles:
+                for diaIncompatible in listaDiasDelIncompatible:
+                    if (dia + diaIncompatible) == 2:
+                        flagPenalizacion = 1
+
+                    if flagPenalizacion == 1:
+                        break;
+
+                if flagPenalizacion == 1:
+                    break;
+
+            if flagPenalizacion == 1:
+                break;
+
+        if flagPenalizacion == 1:
+            puntajeCoincidencias[i] = -999999
+            break;
+                        
+        #Semanas
+        semanasTomadas = [0, 0, 0, 0, 0]
+
+        for semana in range(5):
+            semanasTomadas[semana] = seTomoVacacionesEnCiertaSemana(semana, diasDelDev)
+
+        # Si coincide lo ocurrido con lo esperado le ponemos 10
+        puntajeSemanas[i] = 10 if dev.semanas == semanasTomadas else (-noCoincidencias(dev.semana, semanasTomadas))
+
+        #Cantidad de dias
+        if dev.cantidadDiasVacas == sum(diasDelDev):
+            puntajeDias[i] = 20
+
+        if dev.cantidadDiasVacas < sum(diasDelDev):
+            puntajeDias[i] = dev.cantidadDiasVacas - sum(diasDelDev)
+
+        if sum(diasDelDev) > dev.cantidadDiasVacas:
+            puntajeDias[i] = -999999
+
+    return sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias)
     
 # registra la función que se va a evaluar
 toolbox.register("evaluate", funcAptitud)
@@ -81,8 +180,7 @@ creator.create("Individual", list, fitness=creator.Fitness)
 # indica que los genes son binarios ( 0 / 1 )
 toolbox.register("attr_bin", random.randint, 0, 1)
 
-# cantidad de genes que va a tener el cromosoma
-cant_genesCromosoma = 10
+cant_genesCromosoma = 330 # Son 465 porque son 15 devs X 22 dias
 
 # registra el tipo de individuo y población a usar
 toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bin, cant_genesCromosoma)
@@ -116,19 +214,7 @@ log.info('Parametros de la Corrida definidos')
 
 #################################################################### ESTRUCTURAS ####################################################################
 # En esta seccion se encuentran las estructuras de datos a utilizar
-
-class Calendario:
-    
-    dias = []
-    # dias = [[1,2], [3], [6], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-
 class Desarrollador:
-
-    idDev
-    cantidadDeTandas
-    devsIncompatibles
-    semanas
-    cantidadDiasVacas
 
     def __init__(self, idDev, cantidadDeTandas, devsIncompatibles, semanas, cantidadDiasVacas):
         self.idDev = idDev
@@ -137,11 +223,9 @@ class Desarrollador:
         self.semanas = semanas
         self.cantidadDiasVacas = cantidadDiasVacas
 
-##################################################################### FUNCIONES #####################################################################
-# En esta seccion se encuentran todas las funciones a ser utilizadas en la seccion EJECUCION
-
 
 ##################################################################### EJECUCION #####################################################################
 # En esta seccion se hacen las llamadas a las funciones definidas previamente para ejecutar el algoritmo genetico
 
+cal = toolbox.population(n=2)
 
