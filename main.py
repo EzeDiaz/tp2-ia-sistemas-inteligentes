@@ -1,13 +1,13 @@
 ##################################################################### FUNCIONES #####################################################################
 # En esta seccion se encuentran todas las funciones a ser utilizadas en la seccion EJECUCION
 
-def obtenerDiasDeUnDev(indiceDev):
+def obtenerDiasDeUnDev(indiceDev, individual):
     # Nos quedamos con una lista de los dias del dev
     # 22 elementos; 1 si se tomo vacaciones, 0 si trabajo - No estan los fines de semana
     diasDelDev = []
 
     for j in range(22):
-        indiceDiaDelDev = i + 15 * j # i es el desarrollador, j es el dia
+        indiceDiaDelDev = indiceDev + 15 * j # indiceDev es el desarrollador, j es el dia
         diasDelDev.append(individual[indiceDiaDelDev])
 
     return diasDelDev
@@ -105,7 +105,7 @@ def funcAptitud(individual):
     puntajeDias = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
     for i in range(15):
-        diasDelDev = obtenerDiasDeUnDev(i)
+        diasDelDev = obtenerDiasDeUnDev(i, individual)
         dev = desarrolladores[i]
 
         #Cantidad de tandas
@@ -125,20 +125,16 @@ def funcAptitud(individual):
         flagPenalizacion = 0
 
         for incom in dev.devsIncompatibles:
-            listaDeListaDiasDevsIncompatibles.append(obtenerDiasDeUnDev(incom))
+            listaDeListaDiasDevsIncompatibles.append(obtenerDiasDeUnDev(incom, individual))
 
-        for dia in diasDelDev:
+        for indice in range(22):
             for listaDiasDelIncompatible in listaDeListaDiasDevsIncompatibles:
-                for diaIncompatible in listaDiasDelIncompatible:
-                    if (dia + diaIncompatible) == 2:
-                        flagPenalizacion = 1
-
-                    if flagPenalizacion == 1:
-                        break;
+                if (diasDelDev[indice] + listaDiasDelIncompatible[indice]) == 2:
+                    flagPenalizacion = 1
 
                 if flagPenalizacion == 1:
-                    break;
-
+                        break;
+            
             if flagPenalizacion == 1:
                 break;
 
@@ -229,3 +225,8 @@ class Desarrollador:
 
 cal = toolbox.population(n=2)
 
+
+dev1 = [1,0,1]
+dev2 = [1,0,0]
+
+log.info(dev1 + dev2)
