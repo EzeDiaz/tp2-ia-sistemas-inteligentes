@@ -122,7 +122,7 @@ toolbox.register("select", tools.selTournament, tournsize=2)
 toolbox.register("mate", tools.cxTwoPoint)
 
 # Registrar tipo de Mutación a aplicar con sus parámetros
-toolbox.register("mutate", tools.mutFlipBit, indpb=0.5)
+toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.5)
 
 log.info('Operadores Genaticos definidos')
 
@@ -174,7 +174,7 @@ def funcAptitud(individual):
                 break;
 
         if flagPenalizacion == 1:
-            puntajeCoincidencias[i] = -999999
+            puntajeCoincidencias[i] = -99
             break;
                         
         #Semanas
@@ -184,14 +184,14 @@ def funcAptitud(individual):
             semanasTomadas[semana] = seTomoVacacionesEnCiertaSemana(semana, diasDelDev)
 
         # Si coincide lo ocurrido con lo esperado le ponemos 10
-        puntajeSemanas[i] = 10 if dev.semanas == semanasTomadas else (-noCoincidencias(dev.semana, semanasTomadas))
+        puntajeSemanas[i] = 10 if dev.semanas == semanasTomadas else (-noCoincidencias(dev.semanas, semanasTomadas))
 
         #Cantidad de dias
         if  sum(diasDelDev) <= dev.cantidadDiasVacas:
             puntajeDias[i] = (sum(diasDelDev) * 20) / dev.cantidadDiasVacas
 
         if sum(diasDelDev) > dev.cantidadDiasVacas:
-            puntajeDias[i] = -999999
+            puntajeDias[i] = -99
 
     #return sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias)
     return (sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias),)
@@ -207,7 +207,8 @@ log.info('Funcion de Aptitud definida')
 creator.create("Individual", list, fitness=creator.Fitness)
 
 # indica que los genes son binarios ( 0 / 1 )
-toolbox.register("attr_bin", random.randint, 0, 1)
+listaBinaria = [0, 1]
+toolbox.register("attr_bin", np.random.choice, listaBinaria, p=[0.9, 0.1])
 
 cant_genesCromosoma = 330 # Son 330 porque son 15 devs X 22 dias
 
@@ -221,14 +222,14 @@ log.info('Cromosoma definido')
 ### Parámetros de la Corrida
 
 # Cantidad de Ciclos de la Corrida
-CANT_CICLOS = 100  #@param {type:"integer"}
+CANT_CICLOS = 1000  #@param {type:"integer"}
 
 # Indica que finaliza corrida cuando se alcance una  Aptitud Mínima (opcional)
 FINALIZA_CORRIDA_POR_MIN_APTITUD = True  #@param {type:"boolean"}
-FINALIZA_CORRIDA_VAL_MIN_APTITUD = 100  #@param {type:"integer"}
+FINALIZA_CORRIDA_VAL_MIN_APTITUD = 250  #@param {type:"integer"}
 
 # Cantidad de Individuos en la Población
-CANT_INDIVIDUOS_POBLACION = 3  #@param {type:"integer"}
+CANT_INDIVIDUOS_POBLACION = 100  #@param {type:"integer"}
 
 # Probabilidad del Cruzamiento (en AG 1 = 100%)
 PROBAB_CRUZAMIENTO = 1 
@@ -358,3 +359,4 @@ print("\n-- Corrida Finalizada en %i ciclos --" % ciclo )
 
 mejorCiclo = np.argmax( ciclosMaxAptitud )
 print("\n== Mejor Individuo de la Corrida:", ciclosMaxIndiv[mejorCiclo], " { ", ciclosMaxAptitud[mejorCiclo], " } ==")
+print(mejorCiclo)
