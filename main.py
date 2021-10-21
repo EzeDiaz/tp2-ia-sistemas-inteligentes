@@ -32,6 +32,40 @@ def noCoincidencias(unaLista, otraLista):
 
     return contador
 
+#################################################################### ESTRUCTURAS ####################################################################
+# En esta seccion se encuentran las estructuras de datos a utilizar
+class Desarrollador:
+
+    def __init__(self, idDev, cantidadDeTandas, devsIncompatibles, semanas, cantidadDiasVacas):
+        self.idDev = idDev
+        self.cantidadDeTandas = cantidadDeTandas
+        self.devsIncompatibles = devsIncompatibles
+        self.semanas = semanas
+        self.cantidadDiasVacas = cantidadDiasVacas
+
+############################################################## FIXTURE DE DESARROLLADORES ##############################################################
+# En esta seccion se inicializan las variables auxiliares y las correspondientes a la biblioteca a utilizar
+# Tomado de: https://github.com/PGP-MachineLearning/IA/blob/master/AG-One-Max-Problem.ipynb
+desarrolladores = []
+
+# 15 porque queremos 15 devs
+desarrolladores.append(Desarrollador(0,2,[1],[0,1,1,0,0],5))
+desarrolladores.append(Desarrollador(1,1,[0],[1,1,0,0,0],8))
+desarrolladores.append(Desarrollador(2,3,[13],[1,0,1,0,1],3))
+desarrolladores.append(Desarrollador(3,3,[],[1,1,0,1,0],3))
+desarrolladores.append(Desarrollador(4,2,[5,6],[0,0,1,1,0],3))
+desarrolladores.append(Desarrollador(5,2,[4,6],[1,0,0,0,1],7))
+desarrolladores.append(Desarrollador(6,1,[4,5],[1,1,0,0,0],10))
+desarrolladores.append(Desarrollador(7,2,[],[0,0,1,1,0],4))
+desarrolladores.append(Desarrollador(8,1,[],[0,0,1,0,0],4))
+desarrolladores.append(Desarrollador(9,1,[10,11],[1,1,0,0,0],7))
+desarrolladores.append(Desarrollador(10,2,[9,11],[0,0,0,1,1],7))
+desarrolladores.append(Desarrollador(11,2,[9,10],[0,0,1,1,0],7))
+desarrolladores.append(Desarrollador(12,2,[],[1,1,0,0,0],3))
+desarrolladores.append(Desarrollador(13,3,[2],[0,0,0,1,0],3))
+desarrolladores.append(Desarrollador(14,1,[],[1,1,1,0,0],12))
+
+
 ##################################################################### SETUP INICIAL #####################################################################
 # En esta seccion se inicializan las variables auxiliares y las correspondientes a la biblioteca a utilizar
 # Tomado de: https://github.com/PGP-MachineLearning/IA/blob/master/AG-One-Max-Problem.ipynb
@@ -159,8 +193,9 @@ def funcAptitud(individual):
         if sum(diasDelDev) > dev.cantidadDiasVacas:
             puntajeDias[i] = -999999
 
-    return sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias)
-    
+    #return sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias)
+    return (sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias),)
+
 # registra la función que se va a evaluar
 toolbox.register("evaluate", funcAptitud)
 
@@ -174,7 +209,7 @@ creator.create("Individual", list, fitness=creator.Fitness)
 # indica que los genes son binarios ( 0 / 1 )
 toolbox.register("attr_bin", random.randint, 0, 1)
 
-cant_genesCromosoma = 330 # Son 465 porque son 15 devs X 22 dias
+cant_genesCromosoma = 330 # Son 330 porque son 15 devs X 22 dias
 
 # registra el tipo de individuo y población a usar
 toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bin, cant_genesCromosoma)
@@ -190,7 +225,7 @@ CANT_CICLOS = 100  #@param {type:"integer"}
 
 # Indica que finaliza corrida cuando se alcance una  Aptitud Mínima (opcional)
 FINALIZA_CORRIDA_POR_MIN_APTITUD = True  #@param {type:"boolean"}
-FINALIZA_CORRIDA_VAL_MIN_APTITUD = 10  #@param {type:"integer"}
+FINALIZA_CORRIDA_VAL_MIN_APTITUD = 100  #@param {type:"integer"}
 
 # Cantidad de Individuos en la Población
 CANT_INDIVIDUOS_POBLACION = 3  #@param {type:"integer"}
@@ -206,25 +241,120 @@ MUESTRA_ESTADISTICAS = True  #@param {type:"boolean"}
 
 log.info('Parametros de la Corrida definidos')
 
-#################################################################### ESTRUCTURAS ####################################################################
-# En esta seccion se encuentran las estructuras de datos a utilizar
-class Desarrollador:
-
-    def __init__(self, idDev, cantidadDeTandas, devsIncompatibles, semanas, cantidadDiasVacas):
-        self.idDev = idDev
-        self.cantidadDeTandas = cantidadDeTandas
-        self.devsIncompatibles = devsIncompatibles
-        self.semanas = semanas
-        self.cantidadDiasVacas = cantidadDiasVacas
-
-
 ##################################################################### EJECUCION #####################################################################
 # En esta seccion se hacen las llamadas a las funciones definidas previamente para ejecutar el algoritmo genetico
 
-cal = toolbox.population(n=2)
+#@title EJECUCIÓN DE LA CORRIDA
 
 
-dev1 = [1,0,1]
-dev2 = [1,0,0]
+## Define una función auxiliar para calcular estadísticas y guarda info en vectores auxiliares
+def CalculoEstadisticas(ciclo, indivPobla, muestra, mejorMax = True):
+    
+    global mejorIndCorrida
+    global ciclosMaxAptitud
+    global ciclosPromAptitud
+    global ciclosMinAptitud
 
-log.info(dev1 + dev2)
+    if len(indivPobla) == 0:
+      return None, 0, 0, 0 
+
+    auxMax = None
+    auxMin = None
+    auxSum = 0
+    auxBestInd = None
+    auxBestIndApt = None
+    
+    for ind in indivPobla:
+
+        apt = round(ind.fitness.values[0], 2)
+        auxSum = auxSum + apt
+
+        if (auxMax == None) or (apt > auxMax):
+            auxMax = apt
+            if mejorMax:
+              auxBestInd = ind
+              auxBestIndApt = apt
+
+        if (auxMin == None) or (apt < auxMin):
+            auxMin = apt
+            if not mejorMax:
+              auxBestInd = ind
+              auxBestIndApt = apt
+
+    auxProm = round(auxSum / len(indivPobla),2)
+
+    ciclosMaxIndiv.append( auxBestInd )
+    ciclosMaxAptitud.append( auxMax )
+    ciclosPromAptitud.append( auxProm )
+    ciclosMinAptitud.append( auxMin )
+
+    if muestra:          
+        print("\n-- Ciclo  %i --" % ciclo)
+        print(" Mejor Individuo:", auxBestInd, " {", auxBestIndApt, "}")
+        print("   Max: ", auxMax, " / Promedio: ", auxProm, " / Min: ", auxMin)
+        #log.info('-- Ciclo  %i --', ciclo)
+        #log.info(' Mejor Individuo:', auxBestInd, ' {', auxBestIndApt, '}')
+        #log.info('   Max: ', auxMax, ' / Promedio: ', auxProm, ' / Min: ', auxMin)
+
+    return auxBestInd, auxMax, auxProm, auxMin
+
+# Define la población inicial
+indivPobla = toolbox.population(n=CANT_INDIVIDUOS_POBLACION)
+
+# Asigna el valor de aptitud a los individuos de la población inicial
+fitnesses = list(map(toolbox.evaluate, indivPobla))
+for ind, fit in zip(indivPobla, fitnesses):
+    ind.fitness.values = fit
+
+# vectores auxiliares 
+ciclo = 1    
+ciclosMaxIndiv = []
+ciclosMaxAptitud = []
+ciclosPromAptitud = []
+ciclosMinAptitud = []
+
+# Cálcula estadísticas y guarda info en vectores auxiliares
+auxBestInd, auxMax, auxProm, auxMin = CalculoEstadisticas(0, indivPobla, MUESTRA_ESTADISTICAS)
+      
+        # criterio de paro
+while (ciclo < CANT_CICLOS) and (not(FINALIZA_CORRIDA_POR_MIN_APTITUD) or (auxMax < FINALIZA_CORRIDA_VAL_MIN_APTITUD)):
+
+    # Realiza la Selección
+    indivSelecc = toolbox.select(indivPobla, len(indivPobla))
+
+    # Inicializa a los hijos clonando a los seleccionados
+    indivHijos = list(map(toolbox.clone, indivSelecc))
+    
+    # Realiza el Cruzamiento
+    for hijo1, hijo2 in zip(indivHijos[::2], indivHijos[1::2]):
+        if random.random() < PROBAB_CRUZAMIENTO:
+            toolbox.mate(hijo1, hijo2)
+            del hijo1.fitness.values
+            del hijo2.fitness.values
+
+    # Realiza la Mutación
+    for mutant in indivHijos:
+        if random.random() < PROBAB_MUTACION:
+            toolbox.mutate(mutant)
+            del mutant.fitness.values
+              
+    # Evalua a los individuos que salen de la Mutación
+    #  para determinar si son válidos y su valor de aptitud
+    invalid_ind = [ind for ind in indivHijos if not ind.fitness.valid]
+    fitnesses = map(toolbox.evaluate, invalid_ind)
+    for ind, fit in zip(invalid_ind, fitnesses):
+        ind.fitness.values = fit
+    
+    # Reemplaza la población actual con los hijos
+    indivPobla[:] = indivHijos
+    
+    # Cálcula estadísticas y guarda info en vectores auxiliares
+    auxBestInd, auxMax, auxProm, auxMin = CalculoEstadisticas(ciclo, indivPobla, MUESTRA_ESTADISTICAS)
+
+
+    ciclo = ciclo + 1
+
+print("\n-- Corrida Finalizada en %i ciclos --" % ciclo )
+
+mejorCiclo = np.argmax( ciclosMaxAptitud )
+print("\n== Mejor Individuo de la Corrida:", ciclosMaxIndiv[mejorCiclo], " { ", ciclosMaxAptitud[mejorCiclo], " } ==")
