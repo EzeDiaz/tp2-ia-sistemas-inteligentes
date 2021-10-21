@@ -32,6 +32,17 @@ def noCoincidencias(unaLista, otraLista):
 
     return contador
 
+def cantidadDeTandas(diasDelDev):
+    diaAnterior = 0
+    sumaDeTandas = 0
+    for dia in diasDelDev:
+        if(dia == 1 and diaAnterior == 0):
+            sumaDeTandas+=1
+
+        diaAnterior = dia
+
+    return sumaDeTandas
+
 #################################################################### ESTRUCTURAS ####################################################################
 # En esta seccion se encuentran las estructuras de datos a utilizar
 class Desarrollador:
@@ -143,13 +154,7 @@ def funcAptitud(individual):
         dev = desarrolladores[i]
 
         #Cantidad de tandas
-        diaAnterior = 0
-        sumaDeTandas = 0
-        for dia in diasDelDev:
-            if(dia == 1 and diaAnterior == 0):
-                sumaDeTandas+=1
-
-            diaAnterior = dia
+        sumaDeTandas = cantidadDeTandas(diasDelDev)
 
         # Si coincide lo ocurrido con lo esperado le ponemos 10
         puntajeTandas[i] = 10 if dev.cantidadDeTandas == sumaDeTandas else abs(dev.cantidadDeTandas - sumaDeTandas)
@@ -193,7 +198,7 @@ def funcAptitud(individual):
         if sum(diasDelDev) > dev.cantidadDiasVacas:
             puntajeDias[i] = -99
 
-    #return sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias)
+    #return (sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias))
     return (sum(puntajeTandas) + sum(puntajeCoincidencias) + sum(puntajeSemanas) + sum(puntajeDias),)
 
 # registra la función que se va a evaluar
@@ -290,12 +295,11 @@ def CalculoEstadisticas(ciclo, indivPobla, muestra, mejorMax = True):
     ciclosMinAptitud.append( auxMin )
 
     if muestra:          
-        print("\n-- Ciclo  %i --" % ciclo)
-        print(" Mejor Individuo:", auxBestInd, " {", auxBestIndApt, "}")
-        print("   Max: ", auxMax, " / Promedio: ", auxProm, " / Min: ", auxMin)
-        #log.info('-- Ciclo  %i --', ciclo)
-        #log.info(' Mejor Individuo:', auxBestInd, ' {', auxBestIndApt, '}')
-        #log.info('   Max: ', auxMax, ' / Promedio: ', auxProm, ' / Min: ', auxMin)
+        log.info('-- Ciclo  %d --', ciclo)
+        log.info(' Mejor Individuo: %s { %d }', auxBestInd, auxBestIndApt)    
+        log.info('   Max: %f / Promedio: %f / Min: %f ', auxMax, auxProm, auxMin)
+
+
 
     return auxBestInd, auxMax, auxProm, auxMin
 
@@ -355,8 +359,47 @@ while (ciclo < CANT_CICLOS) and (not(FINALIZA_CORRIDA_POR_MIN_APTITUD) or (auxMa
 
     ciclo = ciclo + 1
 
-print("\n-- Corrida Finalizada en %i ciclos --" % ciclo )
+log.info('---- Corrida Finalizada en %d ciclos ----', ciclo )
 
 mejorCiclo = np.argmax( ciclosMaxAptitud )
-print("\n== Mejor Individuo de la Corrida:", ciclosMaxIndiv[mejorCiclo], " { ", ciclosMaxAptitud[mejorCiclo], " } ==")
-print(mejorCiclo)
+
+log.info('== Mejor Individuo de la Corrida: %s { %f }', ciclosMaxIndiv[mejorCiclo], ciclosMaxAptitud[mejorCiclo])
+
+log.info('Mejor individuo encontrado en el ciclo %d', mejorCiclo )
+
+log.info('--- Datos del mejor individuo ---')
+log.info('--- Id desarrollador | Tandas: (deseadas, tomadas) | Coincidencias: (prohibidas, ocurridas) | Semanas: (deseadas, tomadas) | Dias: (deseados, tomados) ---')
+for i in range(15):
+    diasDelDev = obtenerDiasDeUnDev(i, ciclosMaxIndiv[mejorCiclo])
+
+    #Tandas
+    sumaDeTandas = cantidadDeTandas(diasDelDev)
+
+    #Coincidencia de desarrolladores
+    listaDeListaDiasOtrosDevs = []
+    devsQueSeCruzo = []
+
+    for j in range(15):
+        listaDeListaDiasOtrosDevs.append(obtenerDiasDeUnDev(j, ciclosMaxIndiv[mejorCiclo]))
+
+    # 22 porque itero sobre los dias habiles
+    for indice in range(22):
+        indicadorDeDev = 0
+        for listaDiasDelOtro in listaDeListaDiasOtrosDevs:
+            if (diasDelDev[indice] + listaDiasDelOtro[indice]) == 2:
+                devsQueSeCruzo.append(indicadorDeDev)
+
+            indicadorDeDev+=1
+
+    devsQueSeCruzoSinRepetidos = set(devsQueSeCruzo)
+
+    #Semanas
+    semanasTomadas = [0, 0, 0, 0, 0]
+
+    for semana in range(5):
+        semanasTomadas[semana] = seTomoVacacionesEnCiertaSemana(semana, diasDelDev)
+
+    #Dias tomados
+    diasTomados = sum(diasDelDev)
+
+    log.info(' %d | Tandas: (%d, %d) | Coincidencias: (%s, %s) | Semanas: (%s, %s) | Dias: (%d, %d) ', i, desarrolladores[i].cantidadDeTandas, sumaDeTandas, desarrolladores[i].devsIncompatibles, devsQueSeCruzoSinRepetidos, desarrolladores[i].semanas, semanasTomadas, desarrolladores[i].cantidadDiasVacas, diasTomados)
