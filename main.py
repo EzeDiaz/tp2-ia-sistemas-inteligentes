@@ -127,6 +127,7 @@ def funcAptitud(individual):
         for incom in dev.devsIncompatibles:
             listaDeListaDiasDevsIncompatibles.append(obtenerDiasDeUnDev(incom, individual))
 
+        # 22 porque itero sobre los dias habiles
         for indice in range(22):
             for listaDiasDelIncompatible in listaDeListaDiasDevsIncompatibles:
                 if (diasDelDev[indice] + listaDiasDelIncompatible[indice]) == 2:
@@ -152,11 +153,8 @@ def funcAptitud(individual):
         puntajeSemanas[i] = 10 if dev.semanas == semanasTomadas else (-noCoincidencias(dev.semana, semanasTomadas))
 
         #Cantidad de dias
-        if dev.cantidadDiasVacas == sum(diasDelDev):
-            puntajeDias[i] = 20
-
-        if dev.cantidadDiasVacas < sum(diasDelDev):
-            puntajeDias[i] = dev.cantidadDiasVacas - sum(diasDelDev)
+        if  sum(diasDelDev) <= dev.cantidadDiasVacas:
+            puntajeDias[i] = (sum(diasDelDev) * 20) / dev.cantidadDiasVacas
 
         if sum(diasDelDev) > dev.cantidadDiasVacas:
             puntajeDias[i] = -999999
