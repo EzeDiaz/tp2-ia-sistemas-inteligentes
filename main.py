@@ -112,7 +112,7 @@ log.info('Inicializando variables')
 #@title
 import random
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 from deap import base
 from deap import creator
@@ -231,7 +231,7 @@ CANT_CICLOS = 1000  #@param {type:"integer"}
 
 # Indica que finaliza corrida cuando se alcance una  Aptitud Mínima (opcional)
 FINALIZA_CORRIDA_POR_MIN_APTITUD = True  #@param {type:"boolean"}
-FINALIZA_CORRIDA_VAL_MIN_APTITUD = 250  #@param {type:"integer"}
+FINALIZA_CORRIDA_VAL_MIN_APTITUD = 300  #@param {type:"integer"}
 
 # Cantidad de Individuos en la Población
 CANT_INDIVIDUOS_POBLACION = 100  #@param {type:"integer"}
@@ -403,3 +403,16 @@ for i in range(15):
     diasTomados = sum(diasDelDev)
 
     log.info(' %d | Tandas: (%d, %d) | Coincidencias: (%s, %s) | Semanas: (%s, %s) | Dias: (%d, %d) ', i, desarrolladores[i].cantidadDeTandas, sumaDeTandas, desarrolladores[i].devsIncompatibles, devsQueSeCruzoSinRepetidos, desarrolladores[i].semanas, semanasTomadas, desarrolladores[i].cantidadDiasVacas, diasTomados)
+
+#@title MOSTRAR GRAFICO DE LA CORRIDA
+plt.figure(figsize=(15,8)) 
+plt.plot(ciclosPromAptitud)
+plt.plot(ciclosMinAptitud)
+plt.plot(ciclosMaxAptitud)
+
+plt.title('Resultados de la Corrida')
+plt.xlabel('Ciclos')
+plt.ylabel('Aptitud')
+plt.legend(['Promedio', 'Mínima', 'Máxima'], loc='lower right')
+
+plt.show()
