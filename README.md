@@ -13,11 +13,11 @@ Trabajo Práctico 2 - Inteligencia Artificial - Sistemas Inteligentes
 [Enunciado Sistemas Inteligentes - 2do Cuatrimestre 2021](https://drive.google.com/file/d/18Wz3wD0k8PnrjpACX-vVBbVzKHncLakK/view?usp=sharing)
 
 ## Ejecucion del programa
-El programa fue probado en un entorno con `Python 3.9.7`, la biblioteca DEAP (Distributed Evolutionary Algorithms in Python) (para instalarla correr `!pip install deap`) y la biblioteca matplotlib (para instalarla correr `python -m pip install -U pip` y luego `python -m pip install -U matplotlib --prefer-binary`) instalados. 
+El programa fue probado en un entorno con `Python 3.9.7`, su gestor de paquetes pip (para instalarlo correr `python -m pip install -U pip`), la biblioteca DEAP (Distributed Evolutionary Algorithms in Python) (para instalarla correr `!pip install deap`) y la biblioteca matplotlib (`python -m pip install -U matplotlib --prefer-binary`) instalados. 
 
 - Abrir una consola en la carpeta donde se encuentra el archivo `main.py`
 - Realizar las modificaciones necesarias en el archivo `config.cfg` para ejecutar con los parametros deseados
   - Seccion `log`
     - `formato` especifica el formato deseado para la generacion del log
 - Ejecutar `python main.py` en la consola
-- Revisar el log generado (se genera con la fecha y hora de ejecucion) para analizar los resutlados obtenidos
+- Revisar el log y el grafico generados (se genera con la fecha y hora de ejecucion) para analizar los resultados obtenidos
