@@ -19,5 +19,22 @@ El programa fue probado en un entorno con `Python 3.9.7`, su gestor de paquetes 
 - Realizar las modificaciones necesarias en el archivo `config.cfg` para ejecutar con los parametros deseados
   - Seccion `log`
     - `formato` especifica el formato deseado para la generacion del log
+      - Valores permitidos: .log - .csv
+  - Seccion `opearadores_geneticos`
+    - `participantes_torneo` especifica cuantos participantes tendra el torneo
+      - Valores permitidos: numeros enteros
+    - `metodo_cruzamiento` especifica el metodo de cruzamiento
+      - Valores permitidos: multipunto - simple
+    - `metodo_mutacion` especifica el metodo de mutacion
+      - Valores permitidos: shuffle - flip_bit
+  - Seccion `corrida`
+    - `ciclos` especifica cuantos ciclos correra el algoritmo
+      - Valores permitidos: numeros enteros
+    - `umbral_aptitud` especifica el minimo valor de aptitud para que corte el algoritmo
+      - Valores permitidos: numeros enteros
+    - `cantidad_individuos_poblacion` especifica la cantidad de individuos de la poblacion
+      - Valores permitidos: numeros enteros
+    - `probabilidad_de_mutacion` especifica la probabilidad de mutacion
+      - Valores permitidos: numeros flotantes entre 0 y 1 (0.1 - 0.2 - etc) 
 - Ejecutar `python main.py` en la consola
 - Revisar el log y el grafico generados (se genera con la fecha y hora de ejecucion) para analizar los resultados obtenidos
