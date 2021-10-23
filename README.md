@@ -13,7 +13,7 @@ Trabajo Práctico 2 - Inteligencia Artificial - Sistemas Inteligentes
 [Enunciado Sistemas Inteligentes - 2do Cuatrimestre 2021](https://drive.google.com/file/d/18Wz3wD0k8PnrjpACX-vVBbVzKHncLakK/view?usp=sharing)
 
 ## Ejecución del programa
-El programa fue probado en un entorno con `Python 3.9.7`, su gestor de paquetes pip (para instalarlo correr `python -m pip install -U pip`), la biblioteca DEAP (Distributed Evolutionary Algorithms in Python) (para instalarla correr `!pip install deap`) y la biblioteca matplotlib (`python -m pip install -U matplotlib --prefer-binary`) instalados. 
+Para poder correr el ejecutable `Ejecutar algoritmo - Con instalacion de dependencias` se debe contar con la versión 3.9.7 de Python instalada (visitar https://www.python.org/downloads/). 
 
 - Realizar las modificaciones necesarias en el archivo `config.cfg` para ejecutar con los parametros deseados
   - Seccion `log`
@@ -35,6 +35,5 @@ El programa fue probado en un entorno con `Python 3.9.7`, su gestor de paquetes 
       - Valores permitidos: numeros enteros
     - `probabilidad_de_mutacion` especifica la probabilidad de mutacion
       - Valores permitidos: numeros flotantes entre 0 y 1 (0.1 - 0.2 - etc) 
-- Abrir una consola en la carpeta donde se encuentra el archivo `main.py`
-- Ejecutar `python main.py` en la consola
+- Doble click en `Ejecutar algoritmo - Con instalacion de dependencias`
 - Revisar el log y el grafico generados (se genera con la fecha y hora de ejecucion) para analizar los resultados obtenidos
