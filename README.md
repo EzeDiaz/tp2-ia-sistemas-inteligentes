@@ -12,7 +12,7 @@ Trabajo Práctico 2 - Inteligencia Artificial - Sistemas Inteligentes
 ## Enunciado
 [Enunciado Sistemas Inteligentes - 2do Cuatrimestre 2021](https://drive.google.com/file/d/18Wz3wD0k8PnrjpACX-vVBbVzKHncLakK/view?usp=sharing)
 
-## Ejecucion del programa
+## Ejecución del programa
 El programa fue probado en un entorno con `Python 3.9.7`, su gestor de paquetes pip (para instalarlo correr `python -m pip install -U pip`), la biblioteca DEAP (Distributed Evolutionary Algorithms in Python) (para instalarla correr `!pip install deap`) y la biblioteca matplotlib (`python -m pip install -U matplotlib --prefer-binary`) instalados. 
 
 - Abrir una consola en la carpeta donde se encuentra el archivo `main.py`
