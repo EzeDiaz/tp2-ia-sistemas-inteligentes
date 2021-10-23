@@ -127,7 +127,7 @@ toolbox = base.Toolbox()
 ## (ver lista completa en https://deap.readthedocs.io/en/master/api/tools.html#operators )
 
 # Registrar tipo de Selección a aplicar con sus parámetros
-toolbox.register("select", tools.selTournament, tournsize=2)
+toolbox.register("select", tools.selTournament, tournsize=4)
 
 # Registrar tipo de Cruzamiento a aplicar con sus parámetros
 toolbox.register("mate", tools.cxTwoPoint)
@@ -135,7 +135,7 @@ toolbox.register("mate", tools.cxTwoPoint)
 # Registrar tipo de Mutación a aplicar con sus parámetros
 toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.5)
 
-log.info('Operadores Genaticos definidos')
+log.info('Operadores Geneticos definidos')
 
 #@title FUNCIÓN DE APTITUD
 
@@ -227,14 +227,14 @@ log.info('Cromosoma definido')
 ### Parámetros de la Corrida
 
 # Cantidad de Ciclos de la Corrida
-CANT_CICLOS = 1000  #@param {type:"integer"}
+CANT_CICLOS = 100  #@param {type:"integer"}
 
 # Indica que finaliza corrida cuando se alcance una  Aptitud Mínima (opcional)
 FINALIZA_CORRIDA_POR_MIN_APTITUD = True  #@param {type:"boolean"}
-FINALIZA_CORRIDA_VAL_MIN_APTITUD = 300  #@param {type:"integer"}
+FINALIZA_CORRIDA_VAL_MIN_APTITUD = 500  #@param {type:"integer"}
 
 # Cantidad de Individuos en la Población
-CANT_INDIVIDUOS_POBLACION = 100  #@param {type:"integer"}
+CANT_INDIVIDUOS_POBLACION = 500  #@param {type:"integer"}
 
 # Probabilidad del Cruzamiento (en AG 1 = 100%)
 PROBAB_CRUZAMIENTO = 1 
