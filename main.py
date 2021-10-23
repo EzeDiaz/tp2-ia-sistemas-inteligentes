@@ -127,13 +127,19 @@ toolbox = base.Toolbox()
 ## (ver lista completa en https://deap.readthedocs.io/en/master/api/tools.html#operators )
 
 # Registrar tipo de Selección a aplicar con sus parámetros
-toolbox.register("select", tools.selTournament, tournsize=4)
+toolbox.register("select", tools.selTournament, tournsize=config.getint('opearadores_geneticos', 'participantes_torneo'))
 
 # Registrar tipo de Cruzamiento a aplicar con sus parámetros
-toolbox.register("mate", tools.cxTwoPoint)
+if config.get('opearadores_geneticos', 'metodo_cruzamiento') == 'multipunto':
+    toolbox.register("mate", tools.cxTwoPoint)
+if config.get('opearadores_geneticos', 'metodo_cruzamiento') == 'simple':
+    toolbox.register("mate", tools.cxOnePoint)
 
 # Registrar tipo de Mutación a aplicar con sus parámetros
-toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.5)
+if config.get('opearadores_geneticos', 'metodo_mutacion') == 'shuffle':
+    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.5)
+if config.get('opearadores_geneticos', 'metodo_mutacion') == 'flip_bit':
+    toolbox.register("mutate", tools.mutFlipBit, indpb=0.5)
 
 log.info('Operadores Geneticos definidos')
 
@@ -227,20 +233,20 @@ log.info('Cromosoma definido')
 ### Parámetros de la Corrida
 
 # Cantidad de Ciclos de la Corrida
-CANT_CICLOS = 100  #@param {type:"integer"}
+CANT_CICLOS = config.getint('corrida', 'ciclos')  #@param {type:"integer"}
 
 # Indica que finaliza corrida cuando se alcance una  Aptitud Mínima (opcional)
 FINALIZA_CORRIDA_POR_MIN_APTITUD = True  #@param {type:"boolean"}
-FINALIZA_CORRIDA_VAL_MIN_APTITUD = 500  #@param {type:"integer"}
+FINALIZA_CORRIDA_VAL_MIN_APTITUD = config.getint('corrida', 'umbral_aptitud')  #@param {type:"integer"}
 
 # Cantidad de Individuos en la Población
-CANT_INDIVIDUOS_POBLACION = 500  #@param {type:"integer"}
+CANT_INDIVIDUOS_POBLACION = config.getint('corrida', 'cantidad_individuos_poblacion')  #@param {type:"integer"}
 
 # Probabilidad del Cruzamiento (en AG 1 = 100%)
 PROBAB_CRUZAMIENTO = 1 
 
 # Probabilidad del Mutación 
-PROBAB_MUTACION = 0.3 #@param {type:"slider", min:0, max:1, step:0.05}
+PROBAB_MUTACION = config.getfloat('corrida', 'probabilidad_de_mutacion') #@param {type:"slider", min:0, max:1, step:0.05}
 
 # Indica si se muestra el detalle de las estadísticas en cada ciclo
 MUESTRA_ESTADISTICAS = True  #@param {type:"boolean"}
