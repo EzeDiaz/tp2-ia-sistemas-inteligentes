@@ -13,7 +13,7 @@ Trabajo Práctico 2 - Inteligencia Artificial - Sistemas Inteligentes
 [Enunciado Sistemas Inteligentes - 2do Cuatrimestre 2021](https://drive.google.com/file/d/18Wz3wD0k8PnrjpACX-vVBbVzKHncLakK/view?usp=sharing)
 
 ## Ejecución del programa
-Para poder correr el ejecutable `Ejecutar algoritmo - Con instalacion de dependencias` se debe contar con la versión 3.9.7 de Python instalada (visitar https://www.python.org/downloads/). 
+Para poder correr el ejecutable `Ejecutar algoritmo - Con instalacion de dependencias` se debe instalar Python previamente (visitar https://www.python.org/downloads/). La última versión con la que se probó el programa es la 3.9.7.
 
 - Realizar las modificaciones necesarias en el archivo `config.cfg` para ejecutar con los parametros deseados
   - Seccion `log`
